@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Newtonsoft.Json;
+
 
 namespace Lab01
 {
@@ -105,7 +105,7 @@ namespace Lab01
             listView1.Items.Clear();
             foreach (MenuItem item in MyMenu)
             {
-                MyDelegetes.AddLinetoListView();
+                Form2.AddLinetoListView();
                 listView1.Items[i].SubItems[0].Text = item.ItemName;
                 listView1.Items[i].SubItems[1].Text = item.Category.ToString();
                 listView1.Items[i].SubItems[2].Text = item.Calories.ToString();

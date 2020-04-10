@@ -81,10 +81,10 @@
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "Burgers",
-            "Garneers",
-            "Chips",
-            "Drinks_Deserts",
+            "Burger",
+            "Garneer",
+            "Chip",
+            "Drink_Desert",
             "Combo"});
             this.comboBox1.Location = new System.Drawing.Point(351, 499);
             this.comboBox1.Name = "comboBox1";
