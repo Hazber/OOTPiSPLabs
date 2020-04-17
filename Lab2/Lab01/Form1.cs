@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using PluginInterface;
 
 
 namespace Lab01
@@ -17,6 +18,7 @@ namespace Lab01
     {
         public enum TOperationType { add, edit, delete, browse };
         public static List<MenuItem> MyMenu = new List<MenuItem>();
+        public static Plugin _curr_Plugin;
         public static Form1 MainForm=null;
         public static Creator[] creators = { new BinFileCreator(), new JsonFileCreator(), new TextFileCreator()};
         public Form1()
@@ -92,7 +94,9 @@ namespace Lab01
             if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
             string filename = saveFileDialog1.FileName;
-            creators[saveFileDialog1.FilterIndex-1].FileSave(filename, MyMenu);
+            byte[] data=creators[saveFileDialog1.FilterIndex-1].FileSave(MyMenu);
+            PluginForm pluginForm = new PluginForm(data,filename);
+            pluginForm.Show();
         }
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -100,7 +104,28 @@ namespace Lab01
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
             string filename = openFileDialog1.FileName;
-            MyMenu = creators[openFileDialog1.FilterIndex-1].FileOpen(filename);
+            byte[] serialized = null;
+            byte[] data = null;
+            using (FileStream fs = new FileStream(filename, FileMode.Open))
+            {
+                serialized = new byte[(int)fs.Length];
+                fs.Read(serialized, 0, serialized.Length);
+            }
+            int res=Plugin.FindPlugin(filename);
+           
+            switch (res)
+            {
+                case -1:
+                    MessageBox.Show("Соответствующий плагин отсутствует!!!");
+                    return;
+                case 1:
+                    data = Plugin.ActivatePlugin(Form1._curr_Plugin,serialized, false);
+                    break;
+                case 0:
+                    data = serialized;
+                    break;
+            }
+            MyMenu = creators[openFileDialog1.FilterIndex-1].FileOpen(data);
             int i = 0;
             listView1.Items.Clear();
             foreach (MenuItem item in MyMenu)

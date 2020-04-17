@@ -12,50 +12,41 @@ namespace Lab01
 {
     public abstract class Creator
     {
-        public abstract void FileSave(string filename, List<MenuItem> MyMenu);
-        public abstract List<MenuItem> FileOpen(string filename);
+        public abstract byte[] FileSave(List<MenuItem> MyMenu);
+        public abstract List<MenuItem> FileOpen(byte[] data);
     }
     public class BinFileCreator:Creator
     {
-        public override void FileSave(string filename, List<MenuItem> MyMenu)
+        public override byte[] FileSave(List<MenuItem> MyMenu)
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream(filename, FileMode.OpenOrCreate))
-            {
-                formatter.Serialize(fs, MyMenu);
-            }
+            MemoryStream ms = new MemoryStream();
+            formatter.Serialize(ms, MyMenu);
+            return ms.ToArray();
         }
-        public override List<MenuItem> FileOpen(string filename)
+        public override List<MenuItem> FileOpen(byte[] data)
         {
             List<MenuItem> MyMenu;
             BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream(filename, FileMode.OpenOrCreate))
-            {
-                 MyMenu= (List<MenuItem>)formatter.Deserialize(fs);
-            }
+            MemoryStream ms = new MemoryStream(data);
+            MyMenu = (List<MenuItem>)formatter.Deserialize(ms);
             return MyMenu;
         }
     }
 
     public class JsonFileCreator : Creator
     {
-        public override void FileSave(string filename, List<MenuItem> MyMenu)
+        public override byte[] FileSave(List<MenuItem> MyMenu)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
             string Serialized = JsonConvert.SerializeObject(MyMenu, settings);
-            using (StreamWriter jsfile = File.CreateText(filename))
-            {
-                jsfile.WriteLine(Serialized);
-            }
+            byte[] ret=System.Text.Encoding.UTF8.GetBytes(Serialized);
+            return ret;
         }
-        public override List<MenuItem> FileOpen(string filename)
+        public override List<MenuItem> FileOpen(byte[] data)
         {
-            string Serialized;
+            string Serialized= Encoding.UTF8.GetString(data);
             JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
-            using (StreamReader jsfile = File.OpenText(filename))
-            {
-                Serialized = jsfile.ReadLine();
-            }
             List<MenuItem> MyMenu = JsonConvert.DeserializeObject<List<MenuItem>>(Serialized, settings);
             return MyMenu;
         }
@@ -63,7 +54,7 @@ namespace Lab01
 
     public class TextFileCreator: Creator
     {
-        public override void FileSave(string filename, List<MenuItem> MyMenu)
+        public override byte[] FileSave(List<MenuItem> MyMenu)
         {
             string Serialized = null;
             foreach (MenuItem item in MyMenu)
@@ -72,21 +63,15 @@ namespace Lab01
                 Serialized += "};";
             }
             Serialized += "$";
-            using (StreamWriter txtfile = File.CreateText(filename))
-            {
-                txtfile.WriteLine(Serialized);
-            }
+            byte[] ret=System.Text.Encoding.UTF8.GetBytes(Serialized);
+            return ret;
         }
 
-        public override List<MenuItem> FileOpen(string filename)
+        public override List<MenuItem> FileOpen(byte[] data)
         {
-            string Serialized = null;
-            using (StreamReader file = File.OpenText(filename))
-            {
-                Serialized = file.ReadLine();
-            }
+            string Serialized = Encoding.UTF8.GetString(data);
             List<MenuItem> LocalMenu = new List<MenuItem>();
-            while (Serialized != "$")
+            while (Serialized[0] != '$')
             {
                 LocalMenu.Add(ParseSerialized(ref Serialized));
             }

@@ -1,0 +1,6 @@
+C:\Users\home\Desktop\Labs\Второй Сем\Лабы по ООТПиСП\Lab2\PluginInterface\bin\Debug\PluginInterface.dll
+C:\Users\home\Desktop\Labs\Второй Сем\Лабы по ООТПиСП\Lab2\PluginInterface\bin\Debug\PluginInterface.pdb
+C:\Users\home\Desktop\Labs\Второй Сем\Лабы по ООТПиСП\Lab2\PluginInterface\obj\Debug\PluginInterface.csprojAssemblyReference.cache
+C:\Users\home\Desktop\Labs\Второй Сем\Лабы по ООТПиСП\Lab2\PluginInterface\obj\Debug\PluginInterface.csproj.CoreCompileInputs.cache
+C:\Users\home\Desktop\Labs\Второй Сем\Лабы по ООТПиСП\Lab2\PluginInterface\obj\Debug\PluginInterface.dll
+C:\Users\home\Desktop\Labs\Второй Сем\Лабы по ООТПиСП\Lab2\PluginInterface\obj\Debug\PluginInterface.pdb
